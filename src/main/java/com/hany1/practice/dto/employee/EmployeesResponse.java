@@ -6,14 +6,14 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class GetEmployeesResponse {
+public class EmployeesResponse {
     private String employeeName;
     private String teamName;
     private String role;
     private LocalDate birthday;
     private LocalDate joinDate;
 
-    public GetEmployeesResponse(Employee e) {
+    public EmployeesResponse(Employee e) {
         this.employeeName = e.getEmployeeName();
         this.teamName = e.getTeam().getTeamName();
         this.role = e.getIsManager() ? "MANAGER" : "MEMBER";

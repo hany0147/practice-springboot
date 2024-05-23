@@ -1,22 +1,32 @@
 package com.hany1.practice.service.employee;
 
-import com.hany1.practice.dto.employee.GetEmployeesResponse;
+import com.hany1.practice.dto.employee.EmployeesResponse;
+import com.hany1.practice.dto.employee.WorkTimeResponse;
 import com.hany1.practice.entity.employee.Employee;
+import com.hany1.practice.entity.employee.WorkHistory;
 import com.hany1.practice.entity.team.Team;
 import com.hany1.practice.repository.employee.EmployeeRepository;
+import com.hany1.practice.repository.employee.WorkHistoryRepository;
 import com.hany1.practice.repository.team.TeamRepository;
 import com.hany1.practice.vo.employee.EmployeeAddRequest;
+import com.hany1.practice.vo.employee.EmployeeWorkTimeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final TeamRepository teamRepository;
+    private final WorkHistoryRepository workHistoryRepository;
 
+    @Transactional
     public void addEmployee(EmployeeAddRequest request) {
         // 기존에 존재하는 직원인가?
 
@@ -37,8 +47,45 @@ public class EmployeeService {
         employeeRepository.save(employee);
     }
 
-    public List<GetEmployeesResponse> getEmployees() {
-        List<GetEmployeesResponse> employees = employeeRepository.findEmployeeListResponses();
+    public List<EmployeesResponse> getEmployees() {
+        List<EmployeesResponse> employees = employeeRepository.findEmployeeListResponses();
         return employees;
+    }
+
+    @Transactional
+    public void checkWorkIn(EmployeeWorkTimeRequest request) {
+        // 등록된 직원인지?
+        Employee employee = employeeRepository.findById(request.getEmployeeId())
+                .orElseThrow(() -> new NoSuchElementException("해당직원의 아이디가 존재하지 않습니다."));
+        // 또다시 출근한건 아닌지?
+        if (workHistoryRepository.existsByCheckTimeAndEmployeeAndIsWorking(LocalDateTime.now().toLocalDate(), employee, true)) {
+            throw new IllegalStateException("이미 출근하셨습니다.");
+        }
+        // 생성
+        WorkHistory workHistory = new WorkHistory(employee, true);
+        workHistoryRepository.save(workHistory);
+
+    }
+
+    @Transactional
+    public void checkWorkOut(EmployeeWorkTimeRequest request) {
+        Employee employee = employeeRepository.findById(request.getEmployeeId())
+                .orElseThrow(() -> new NoSuchElementException("해당직원의 아이디가 존재하지 않습니다."));
+        // 출근이 존재하지 않는다면?
+        if (!workHistoryRepository.existsByCheckTimeAndEmployeeAndIsWorking(LocalDateTime.now().toLocalDate(), employee, true)) {
+            throw new IllegalStateException("출근시간이 존재하지 않습니다. 관리자에게 문의하세요.");
+        }
+
+        // 퇴근이 이미 존재한다면?
+        if (workHistoryRepository.existsByCheckTimeAndEmployeeAndIsWorking(LocalDateTime.now().toLocalDate(), employee, false)) {
+            throw new IllegalStateException("이미 퇴근 상태입니다.");
+        }
+        // 생성
+        WorkHistory workHistory = new WorkHistory(employee, false);
+        workHistoryRepository.save(workHistory);
+    }
+
+    public WorkTimeResponse getWorkTimeDetail(Long employeeId, LocalDate date) {
+        return null;
     }
 }

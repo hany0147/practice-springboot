@@ -6,6 +6,7 @@ import com.hany1.practice.repository.team.TeamRepository;
 import com.hany1.practice.vo.team.TeamAddRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 public class TeamService {
     private final TeamRepository teamRepository;
 
+    @Transactional
     public void addTeam(TeamAddRequest request) {
         Team team = new Team(request.getTeamName());
         teamRepository.save(team);
