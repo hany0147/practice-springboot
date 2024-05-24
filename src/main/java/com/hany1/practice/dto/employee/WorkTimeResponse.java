@@ -1,7 +1,10 @@
 package com.hany1.practice.dto.employee;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class WorkTimeResponse {
     private List<WorkTimeDetailResponse> workTimeDetailResponses;
     private Integer sum;

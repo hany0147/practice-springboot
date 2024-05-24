@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeService employeeService;
+
     @PostMapping("/employee")
     public void addEmployee(@RequestBody EmployeeAddRequest request) {
         employeeService.addEmployee(request);
@@ -27,8 +28,9 @@ public class EmployeeController {
 
     @GetMapping("/employee/work")
     public WorkTimeResponse getWorkTimeDetail(@RequestParam Long employeeId,
-                                                    @RequestParam LocalDate date) {
-        return employeeService.getWorkTimeDetail(employeeId, date);
+                                              @RequestParam int year,
+                                              @RequestParam int month) {
+        return employeeService.getWorkTimeDetail(employeeId, year, month);
 
     }
 
@@ -41,7 +43,6 @@ public class EmployeeController {
     public void checkWorkOut(@RequestBody EmployeeWorkTimeRequest request) {
         employeeService.checkWorkOut(request);
     }
-
 
 
 }
