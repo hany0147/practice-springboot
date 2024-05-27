@@ -11,18 +11,23 @@ import java.time.LocalTime;
 public class WorkTimeDetailResponse {
     private LocalDate date;
     private Integer workingMinutes;
+    private Boolean usingDayOff;
 
-    public WorkTimeDetailResponse(LocalDate date, LocalDateTime checkInTime, LocalDateTime checkOutTime) {
+    public WorkTimeDetailResponse(LocalDate date, LocalDateTime checkInTime, LocalDateTime checkOutTime, Boolean isDayOff) {
         this.date = date;
-        this.workingMinutes = calculateWorkTime(checkInTime, checkOutTime);
+        this.workingMinutes = calculateWorkTime(checkInTime, checkOutTime, isDayOff);
+        this.usingDayOff = isDayOff;
     }
 
-    private Integer calculateWorkTime(LocalDateTime checkInTime, LocalDateTime checkOutTime) {
+    private Integer calculateWorkTime(LocalDateTime checkInTime, LocalDateTime checkOutTime, Boolean isDayOff) {
+        if (isDayOff) {
+            return 0;
+        }
+
         if (checkInTime == null || checkOutTime == null) {
             throw new IllegalArgumentException("출퇴근시간이 비어있습니다. 확인 바랍니다.");
         }
-        System.out.println("checkInTime = " + checkInTime);
-        System.out.println("checkOutTime = " + checkOutTime);
+
         return (int) Duration.between(checkInTime, checkOutTime).toMinutes();
     }
 }

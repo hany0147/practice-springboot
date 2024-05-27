@@ -31,12 +31,16 @@ public class WorkHistory {
     @Column(name = "check_out_time")
     private LocalDateTime checkOutTime;
 
+    @Column(name = "is_day_off")
+    private Boolean isDayOff;
+
 
     public static WorkHistory checkIn(Employee employee) {
         WorkHistory workHistory = WorkHistory.builder()
                 .employee(employee)
                 .date(LocalDate.now())
                 .checkInTime(LocalDateTime.now())
+                .isDayOff(false)
                 .build();
         return workHistory;
     }
@@ -44,6 +48,15 @@ public class WorkHistory {
     public static WorkHistory checkOut(WorkHistory oldWorkHistory) {
         WorkHistory workHistory = oldWorkHistory.toBuilder()
                 .checkOutTime(LocalDateTime.now())
+                .build();
+        return workHistory;
+    }
+
+    public static WorkHistory registerDayOff(Employee employee, LocalDate leaveDate) {
+        WorkHistory workHistory = WorkHistory.builder()
+                .employee(employee)
+                .date(leaveDate)
+                .isDayOff(true)
                 .build();
         return workHistory;
     }

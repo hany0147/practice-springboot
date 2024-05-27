@@ -20,14 +20,6 @@ public class Employee {
     @JoinColumn(name = "team_id", nullable = false, referencedColumnName = "id_team")
     private Team team;
 
-    public Employee(Team team, String employeeName, Boolean isManager, LocalDate joinDate, LocalDate birthday) {
-        this.team = team;
-        this.employeeName = employeeName;
-        this.isManager = isManager;
-        this.joinDate = joinDate;
-        this.birthday = birthday;
-    }
-
     @Column(name = "employee_name", length = 20)
     private String employeeName;
 
@@ -39,5 +31,14 @@ public class Employee {
 
     @Column(name = "birthday")
     private LocalDate birthday;
+
+
+    public Employee(Team team, String employeeName, Boolean isManager, LocalDate joinDate, LocalDate birthday) {
+        this.team = team;
+        this.employeeName = employeeName;
+        this.isManager = isManager;
+        this.joinDate = joinDate;
+        this.birthday = birthday;
+    }
 
 }

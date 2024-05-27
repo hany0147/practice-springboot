@@ -5,4 +5,5 @@ import lombok.Getter;
 @Getter
 public class TeamAddRequest {
     private String teamName;
+    private Integer advanceNoticePeriod;
 }

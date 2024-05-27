@@ -24,11 +24,15 @@ public class Team {
     @Column(name = "team_name", length = 45)
     private String teamName;
 
-    public Team(String teamName) {
+    @Column(name = "advance_notice_period")
+    private Integer advanceNoticePeriod;
+
+    public Team(String teamName, Integer advanceNoticePeriod) {
         if (teamName == null || teamName.isBlank()) {
             throw new IllegalArgumentException("팀명을 입력하시기바랍니다.");
         }
         this.teamName = teamName;
+        this.advanceNoticePeriod = advanceNoticePeriod;
     }
 
     // 수세기

@@ -18,7 +18,7 @@ public class TeamService {
 
     @Transactional
     public void addTeam(TeamAddRequest request) {
-        Team team = new Team(request.getTeamName());
+        Team team = new Team(request.getTeamName(), request.getAdvanceNoticePeriod());
         teamRepository.save(team);
     }
 

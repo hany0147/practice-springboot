@@ -31,7 +31,8 @@ public interface WorkHistoryRepository extends JpaRepository<WorkHistory, Long> 
 
     @Query("SELECT new com.hany1.practice.dto.employee.WorkTimeDetailResponse(wh.date," +
             "wh.checkInTime," +
-            "wh.checkOutTime) " +
+            "wh.checkOutTime," +
+            "wh.isDayOff) " +
             "FROM WorkHistory wh " +
             "WHERE wh.employee.idEmployee = :employeeId " +
             "AND FUNCTION('YEAR', wh.date) = :year " +

@@ -3,9 +3,11 @@ package com.hany1.practice.service.employee;
 import com.hany1.practice.dto.employee.EmployeesResponse;
 import com.hany1.practice.dto.employee.WorkTimeDetailResponse;
 import com.hany1.practice.dto.employee.WorkTimeResponse;
+import com.hany1.practice.entity.employee.DayOff;
 import com.hany1.practice.entity.employee.Employee;
 import com.hany1.practice.entity.employee.WorkHistory;
 import com.hany1.practice.entity.team.Team;
+import com.hany1.practice.repository.employee.DayOffRepository;
 import com.hany1.practice.repository.employee.EmployeeRepository;
 import com.hany1.practice.repository.employee.WorkHistoryRepository;
 import com.hany1.practice.repository.team.TeamRepository;
@@ -26,6 +28,7 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final TeamRepository teamRepository;
     private final WorkHistoryRepository workHistoryRepository;
+    private final DayOffRepository dayOffRepository;
 
     @Transactional
     public void addEmployee(EmployeeAddRequest request) {
@@ -46,6 +49,9 @@ public class EmployeeService {
                 request.getBirthday()
                 );
         employeeRepository.save(employee);
+
+        DayOff dayOff = new DayOff(employee);
+        dayOffRepository.save(dayOff);
     }
 
     public List<EmployeesResponse> getEmployees() {
