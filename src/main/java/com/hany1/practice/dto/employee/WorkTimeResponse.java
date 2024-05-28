@@ -16,6 +16,7 @@ public class WorkTimeResponse {
     }
 
     private Integer sumTotalWorkTime(List<WorkTimeDetailResponse> workTimeDetailResponses) {
+        if (workTimeDetailResponses.isEmpty()) { return 0; }
         return workTimeDetailResponses.stream()
                 .mapToInt(WorkTimeDetailResponse::getWorkingMinutes)
                 .sum();

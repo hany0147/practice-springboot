@@ -27,7 +27,6 @@ import java.util.NoSuchElementException;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final TeamRepository teamRepository;
-    private final WorkHistoryRepository workHistoryRepository;
     private final DayOffRepository dayOffRepository;
 
     @Transactional
@@ -59,47 +58,5 @@ public class EmployeeService {
         return employees;
     }
 
-    @Transactional
-    public void checkWorkIn(EmployeeWorkTimeRequest request) {
-        // 등록된 직원인지?
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new NoSuchElementException("해당직원의 아이디가 존재하지 않습니다."));
-        // 또다시 출근한건 아닌지?
-        if (workHistoryRepository.existsByCheckInTimeAndEmployee(LocalDate.now(), employee)) {
-            throw new IllegalStateException("이미 출근하셨습니다.");
-        }
-        // 생성
-        WorkHistory workHistory = WorkHistory.checkIn(employee);
-        workHistoryRepository.save(workHistory);
 
-    }
-
-    @Transactional
-    public void checkWorkOut(EmployeeWorkTimeRequest request) {
-        Employee employee = employeeRepository.findById(request.getEmployeeId())
-                .orElseThrow(() -> new NoSuchElementException("해당직원의 아이디가 존재하지 않습니다."));
-        // 출근이 존재하지 않는다면?
-        if (!workHistoryRepository.existsByCheckInTimeAndEmployee(LocalDate.now(), employee)) {
-            throw new IllegalStateException("출근시간이 존재하지 않습니다. 관리자에게 문의하세요.");
-        }
-
-        // 퇴근이 이미 존재한다면?
-        if (workHistoryRepository.existsByCheckOutTimeAndEmployee(LocalDate.now(), employee)) {
-            throw new IllegalStateException("이미 퇴근 상태입니다.");
-        }
-
-        // 생성
-        WorkHistory oldWorkHistory = workHistoryRepository.findByDateAndEmployee(LocalDate.now(), employee)
-                .orElseThrow(() -> new NoSuchElementException("해당 날짜에 출퇴근 기록이 존재하지 않습니다."));
-        WorkHistory workHistory = WorkHistory.checkOut(oldWorkHistory);
-        workHistoryRepository.save(workHistory);
-    }
-
-    public WorkTimeResponse getWorkTimeDetail(Long employeeId, int year, int month) {
-
-        List<WorkTimeDetailResponse> workTimeDetailResponses = workHistoryRepository.findWorkTimeDetailResponsesByYearAndMonthAndEmployee(year, month, employeeId);
-
-        WorkTimeResponse workTimeResponse = new WorkTimeResponse(workTimeDetailResponses);
-        return workTimeResponse;
-    }
 }

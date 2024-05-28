@@ -3,6 +3,7 @@ package com.hany1.practice.entity.employee;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ public class WorkHistory {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id_employee", nullable = false)
     private Employee employee;
+
 
     @Column(name = "date")
     private LocalDate date;
@@ -60,7 +62,5 @@ public class WorkHistory {
                 .build();
         return workHistory;
     }
-
-
 
 }

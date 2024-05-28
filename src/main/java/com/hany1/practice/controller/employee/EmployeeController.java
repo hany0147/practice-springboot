@@ -26,23 +26,7 @@ public class EmployeeController {
         return employeeService.getEmployees();
     }
 
-    @GetMapping("/employee/work")
-    public WorkTimeResponse getWorkTimeDetail(@RequestParam Long employeeId,
-                                              @RequestParam int year,
-                                              @RequestParam int month) {
-        return employeeService.getWorkTimeDetail(employeeId, year, month);
 
-    }
-
-    @PostMapping("/employee/work/in")
-    public void checkWorkIn(@RequestBody EmployeeWorkTimeRequest request) {
-        employeeService.checkWorkIn(request);
-    }
-
-    @PostMapping("/employee/work/out")
-    public void checkWorkOut(@RequestBody EmployeeWorkTimeRequest request) {
-        employeeService.checkWorkOut(request);
-    }
 
 
 }
